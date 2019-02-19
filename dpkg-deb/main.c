@@ -199,10 +199,6 @@ set_compress_type(const struct cmdinfo *cip, const char *value)
   compress_params.type = compressor_find_by_name(value);
   if (compress_params.type == COMPRESSOR_TYPE_UNKNOWN)
     badusage(_("unknown compression type '%s'!"), value);
-  if (compress_params.type == COMPRESSOR_TYPE_LZMA)
-    badusage(_("obsolete compression type '%s'; use xz instead"), value);
-  if (compress_params.type == COMPRESSOR_TYPE_BZIP2)
-    badusage(_("obsolete compression type '%s'; use xz or gzip instead"), value);
 }
 
 static const struct cmdinfo cmdinfos[]= {
@@ -250,7 +246,9 @@ int main(int argc, const char *const *argv) {
   if (opt_uniform_compression &&
       (compress_params.type != COMPRESSOR_TYPE_NONE &&
        compress_params.type != COMPRESSOR_TYPE_GZIP &&
-       compress_params.type != COMPRESSOR_TYPE_XZ))
+       compress_params.type != COMPRESSOR_TYPE_XZ &&
+       compress_params.type != COMPRESSOR_TYPE_LZMA &&
+       compress_params.type != COMPRESSOR_TYPE_BZIP2))
     badusage(_("unsupported compression type '%s' with uniform compression"),
              compressor_get_name(compress_params.type));
 
